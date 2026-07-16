@@ -1,4 +1,6 @@
-﻿using Core.Concretes.Entities;
+﻿using Business.Services;
+using Core.Abstracts.IServices;
+using Core.Concretes.Entities;
 using Core.Utils.GenericRepositoryPattern;
 using Data;
 using Data.Context;
@@ -20,6 +22,9 @@ namespace Business
                     .AddDefaultTokenProviders();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Servis Entegrasyonları
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

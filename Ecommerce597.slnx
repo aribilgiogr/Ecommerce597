@@ -2,4 +2,5 @@
   <Project Path="Business/Business.csproj" />
   <Project Path="Core/Core.csproj" />
   <Project Path="Data/Data.csproj" />
+  <Project Path="Web.UI/Web.UI.csproj" Id="bef464b0-4d2d-4d90-9775-1d272c499d9d" />
 </Solution>
