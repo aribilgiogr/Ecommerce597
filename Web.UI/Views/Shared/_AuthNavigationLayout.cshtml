@@ -1,0 +1,37 @@
+﻿@inject SignInManager<Member> SignInManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="account" asp-action="index">
+                Merhaba, @User.Identity?.Name!
+            </a>
+        </li>
+        <li class="nav-item">
+            <form asp-controller="account" asp-action="logout" method="post">
+                <button type="submit" class="nav-link btn btn-link text-dark border-0">
+                    Çıkış Yap
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="account" asp-action="login">
+                Giriş Yap
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="account" asp-action="registercustomer">
+                Müşteri Ol
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="account" asp-action="registerstore">
+                Mağaza Aç
+            </a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,49 @@
+﻿@model RegisterStoreDto
+@{
+    ViewData["Title"] = "Mağaza Kayıt Sayfası";
+}
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <div class="card bg-white shadow rounded-0">
+            <div class="card-body">
+                <h5 class="text-center">Mağaza Kayıt Formu</h5>
+                <hr />
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="StoreName" class="form-control" />
+                        <label asp-for="StoreName"></label>
+                        <span asp-validation-for="StoreName" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="TaxOffice" class="form-control" />
+                        <label asp-for="TaxOffice"></label>
+                        <span asp-validation-for="TaxOffice" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="TaxNumber" class="form-control" />
+                        <label asp-for="TaxNumber"></label>
+                        <span asp-validation-for="TaxNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="ContactEmail" class="form-control" />
+                        <label asp-for="ContactEmail"></label>
+                        <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="ContactPhone" class="form-control" />
+                        <label asp-for="ContactPhone"></label>
+                        <span asp-validation-for="ContactPhone" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" class="form-control" />
+                        <label asp-for="Password"></label>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Kayıt Ol</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

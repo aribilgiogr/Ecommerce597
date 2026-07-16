@@ -1,0 +1,42 @@
+﻿@model LoginDto
+@{
+    ViewData["Title"] = "Giriş Sayfası";
+}
+
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <div class="card bg-white shadow rounded-0">
+            <div class="card-body">
+                <h5 class="text-center">Giriş Formu</h5>
+                <hr />
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" />
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" class="form-control" />
+                        <label asp-for="Password"></label>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" asp-for="RememberMe" />
+                        <label class="form-check-label" asp-for="RememberMe"></label>
+                        <span asp-validation-for="RememberMe" class="text-danger small"></span>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Giriş Yap</button>
+                </form>
+                <hr />
+                <div class="mb-3 text-center">
+                    <a asp-action="registercustomer" asp-controller="account" class="btn btn-secondary btn-sm w-50 rounded-pill">Yeni Müşteri Kaydı</a>
+                </div>
+                <div class="mb-3 text-center">
+                    <a asp-action="registerstore" asp-controller="account" class="btn btn-dark btn-sm w-50 rounded-pill">Yeni Mağaza Kaydı</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

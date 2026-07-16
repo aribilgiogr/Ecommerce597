@@ -1,0 +1,9 @@
+﻿@inject UserManager<Member> UserManager
+@{
+    Member? member = await UserManager.GetUserAsync(User);
+}
+
+@if (member != null)
+{
+    <h1>Merhaba, @member.UserName!</h1>
+}
