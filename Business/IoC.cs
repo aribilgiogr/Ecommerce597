@@ -25,7 +25,7 @@ namespace Business
 
             // Servis Entegrasyonları
             services.AddScoped<IAuthService, AuthService>();
-
+            services.AddScoped<IStoreProductService, StoreProductService>();
             return services;
         }
 

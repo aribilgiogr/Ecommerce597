@@ -1,5 +1,5 @@
 ﻿using Core.Abstracts.IServices;
-using Core.Concretes.DTOs;
+using Core.Concretes.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

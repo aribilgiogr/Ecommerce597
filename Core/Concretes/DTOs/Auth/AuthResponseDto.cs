@@ -1,4 +1,4 @@
-﻿namespace Core.Concretes.DTOs
+﻿namespace Core.Concretes.DTOs.Auth
 {
     public class AuthResponseDto
     {

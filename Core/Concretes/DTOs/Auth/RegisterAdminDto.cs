@@ -1,9 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Core.Concretes.DTOs
+namespace Core.Concretes.DTOs.Auth
 {
-    public class LoginDto
+    public class RegisterAdminDto
     {
+        [Display(Name = "İsim", Prompt = "İsim")]
+        [Required]
+        public string FirstName { get; set; } = null!;
+
+        [Display(Name = "Soyisim", Prompt = "Soyisim")]
+        [Required]
+        public string LastName { get; set; } = null!;
+
         [EmailAddress]
         [Display(Name = "Eposta Adresi", Prompt = "Eposta Adresi")]
         [Required]
@@ -13,8 +21,5 @@ namespace Core.Concretes.DTOs
         [Display(Name = "Parola", Prompt = "Parola")]
         [Required]
         public string Password { get; set; } = null!;
-
-        [Display(Name = "Beni Hatırla", Prompt = "Beni Hatırla")]
-        public bool RememberMe { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Core.Abstracts.IServices;
-using Core.Concretes.DTOs;
+using Core.Concretes.DTOs.Auth;
 using Core.Concretes.Entities;
 using Core.Concretes.Enums;
 using Microsoft.AspNetCore.Identity;

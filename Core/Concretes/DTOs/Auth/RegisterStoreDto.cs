@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Core.Concretes.DTOs
+namespace Core.Concretes.DTOs.Auth
 {
     public class RegisterStoreDto
     {

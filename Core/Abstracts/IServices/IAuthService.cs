@@ -1,4 +1,4 @@
-﻿using Core.Concretes.DTOs;
+﻿using Core.Concretes.DTOs.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
