@@ -1,0 +1,50 @@
+@model IEnumerable<Core.Concretes.DTOs.Product.StoreProductListDto>
+
+@{
+    ViewData["Title"] = "Store Products";
+}
+
+
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>SKU</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Active</th>
+            <th>Updated At</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.Stock</td>
+                <td>@item.SKU</td>
+                <td>@item.BrandName</td>
+                <td>@item.CategoryName</td>
+                <td>@(item.Active ? "Yes" : "No")</td>
+                <td>@item.UpdatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

@@ -2,8 +2,6 @@
 using Core.Concretes.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Threading.Tasks;
 
 namespace Web.UI.Controllers
 {
@@ -98,6 +96,11 @@ namespace Web.UI.Controllers
         {
             await service.LogoutAsync();
             return Redirect(returnUrl ?? "/");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

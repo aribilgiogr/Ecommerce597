@@ -1,14 +1,10 @@
 ﻿using Core.Concretes.DTOs.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Abstracts.IServices
 {
     public interface IStoreProductService
     {
+        Task<int> GetCurrentStoreIdAsync(string uid);
         Task<IEnumerable<StoreProductListDto>> GetStoreProductsAsync(int storeId);
         Task<bool> CreateProductAsync(int storeId, CreateProductDto dto);
         Task<bool> UpdateProductAsync(int storeId, UpdateProductDto dto);

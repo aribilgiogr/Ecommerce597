@@ -90,24 +90,87 @@ namespace Business.Services
             return affectedRows > 0;
         }
 
-        public Task<bool> DeleteProductFeatureAsync(int storeId, int productId, int featureId)
+        public async Task<bool> DeleteProductFeatureAsync(int storeId, int productId, int featureId)
         {
-            throw new NotImplementedException();
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return false;
+
+            var featureRepository = unitOfWork.Repository<ProductFeature>();
+            var feature = await featureRepository.GetByIdAsync(featureId);
+
+            if (feature == null || feature.ProductId != productId) return false;
+
+            featureRepository.Delete(feature);
+            int affectedRows = await unitOfWork.CommitAsync();
+
+            return affectedRows > 0;
         }
 
-        public Task<bool> DeleteProductImageAsync(int storeId, int productId, int imageId)
+        public async Task<bool> DeleteProductImageAsync(int storeId, int productId, int imageId)
         {
-            throw new NotImplementedException();
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return false;
+
+            var imageRepository = unitOfWork.Repository<ProductImage>();
+            var image = await imageRepository.GetByIdAsync(imageId);
+
+            if (image == null || image.ProductId != productId) return false;
+
+            imageRepository.Delete(image);
+            int affectedRows = await unitOfWork.CommitAsync();
+
+            return affectedRows > 0;
         }
 
-        public Task<IEnumerable<ProductFeatureDto>> GetProductFeaturesAsync(int storeId, int productId)
+        public async Task<int> GetCurrentStoreIdAsync(string uid)
         {
-            throw new NotImplementedException();
+            var storeRepository = unitOfWork.Repository<Store>();
+            var stores = await storeRepository.GetManyAsync(s => s.MemberId == uid);
+            return stores.FirstOrDefault()?.Id ?? 0;
         }
 
-        public Task<IEnumerable<ProductImageDto>> GetProductImagesAsync(int storeId, int productId)
+        public async Task<IEnumerable<ProductFeatureDto>> GetProductFeaturesAsync(int storeId, int productId)
         {
-            throw new NotImplementedException();
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return [];
+
+            var featureRepository = unitOfWork.Repository<ProductFeature>();
+            var features = await featureRepository.GetManyAsync(f => f.ProductId == productId);
+
+            return features.OrderBy(f => f.DisplayOrder)
+                           .Select(f => new ProductFeatureDto
+                           {
+                               Id = f.Id,
+                               DisplayOrder = f.DisplayOrder,
+                               FeatureName = f.FeatureName,
+                               FeatureValue = f.FeatureValue,
+                           });
+        }
+
+        public async Task<IEnumerable<ProductImageDto>> GetProductImagesAsync(int storeId, int productId)
+        {
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return [];
+
+            var imageRepository = unitOfWork.Repository<ProductImage>();
+            var images = await imageRepository.GetManyAsync(i => i.ProductId == productId);
+
+            return images.OrderBy(i => i.DisplayOrder)
+                         .Select(i => new ProductImageDto
+                         {
+                             Id = i.Id,
+                             DisplayOrder = i.DisplayOrder,
+                             ImageUrl = i.ImageUrl,
+                             IsMain = i.IsMain
+                         });
         }
 
         public async Task<IEnumerable<StoreProductListDto>> GetStoreProductsAsync(int storeId)
