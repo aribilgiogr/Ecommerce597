@@ -84,7 +84,15 @@ namespace Business.Services
             var product = await productRepository.GetByIdAsync(productId);
             if (product == null || product.StoreId != storeId) return false;
 
-            productRepository.Delete(product);
+            // Hard/Permenant Delete: Kalıcı silme işlemi.
+            // productRepository.Delete(product);
+
+            // Soft Delete: Silinmiş gösterme işlemi, Deleted özelliğini 'true' yaparız.
+            product.Deleted = true;
+            product.Active = false;
+            productRepository.Update(product);
+
+
             int affectedRows = await unitOfWork.CommitAsync();
 
             return affectedRows > 0;
@@ -153,6 +161,27 @@ namespace Business.Services
                            });
         }
 
+        public async Task<UpdateProductDto?> GetProductForUpdateAsync(int storeId, int productId)
+        {
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return null;
+
+            return new UpdateProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Stock = product.Stock,
+                SKU = product.SKU,
+                CategoryId = product.CategoryId,
+                BrandId = product.BrandId,
+                Active = product.Active
+            };
+        }
+
         public async Task<IEnumerable<ProductImageDto>> GetProductImagesAsync(int storeId, int productId)
         {
             var productRepository = unitOfWork.Repository<Product>();
@@ -185,8 +214,8 @@ namespace Business.Services
                 Price = p.Price,
                 Stock = p.Stock,
                 SKU = p.SKU,
-                CategoryName = p.Category.Name,
-                BrandName = p.Brand.Name,
+                CategoryName = p.Category?.Name ?? string.Empty,
+                BrandName = p.Brand?.Name ?? string.Empty,
                 Active = p.Active,
                 UpdatedAt = p.UpdatedAt ?? p.CreatedAt
             });

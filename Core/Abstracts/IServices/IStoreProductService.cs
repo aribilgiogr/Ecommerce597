@@ -5,8 +5,10 @@ namespace Core.Abstracts.IServices
     public interface IStoreProductService
     {
         Task<int> GetCurrentStoreIdAsync(string uid);
+
         Task<IEnumerable<StoreProductListDto>> GetStoreProductsAsync(int storeId);
         Task<bool> CreateProductAsync(int storeId, CreateProductDto dto);
+        Task<UpdateProductDto?> GetProductForUpdateAsync(int storeId, int productId);
         Task<bool> UpdateProductAsync(int storeId, UpdateProductDto dto);
         Task<bool> DeleteProductAsync(int storeId, int productId);
 

@@ -27,6 +27,16 @@ namespace Data.Context
         {
             base.OnModelCreating(builder);
 
+            #region AutoInclude Yapıları
+            builder.Entity<Product>()
+                .Navigation(p => p.Category)
+                .AutoInclude();
+
+            builder.Entity<Product>()
+                .Navigation(p => p.Brand)
+                .AutoInclude();
+            #endregion
+
             #region Birebir ilişkiler (Kimlik ve Profiller)
             builder.Entity<Admin>()
                 .HasOne(a => a.Member)

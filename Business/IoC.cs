@@ -23,9 +23,11 @@ namespace Business
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            // Servis Entegrasyonları
+            // Servis Entegrasyonları: Ekeleme yapılmazsa 'while attempting to activate' hatası alırız.
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IStoreProductService, StoreProductService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IBrandService, BrandService>();
             return services;
         }
 
