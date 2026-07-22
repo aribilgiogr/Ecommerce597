@@ -6,16 +6,17 @@
 }
 
 <h2>Ürün Yönetimi</h2>
+<a asp-action="index" asp-controller="storeproduct" class="btn btn-sm btn-primary">Ürün Listesine Dön</a>
 <hr />
 <!-- Yükleme Formu -->
-<div class="row mb-5">
+<div class="row my-5">
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header text-bg-primary">
-                <h5>Yeni Görsel Yükle</h5>
-            </div>
+        <h4 class="mb-3">Yeni Görsel Yükle</h4>
+        <div class="card rounded-0">
             <div class="card-body">
                 <form asp-action="uploadImage" asp-controller="storeproduct" asp-route-id="@pid" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group mb-3">
                         <label asp-for="File" class="control-label">Görsel Seç</label>
                         <input asp-for="File" class="form-control" type="file" accept="image/*" required />
@@ -34,6 +35,8 @@
         @if (images != null && images.Any())
         {
             <form asp-action="changeDisplayOrders" asp-controller="storeProduct" asp-route-id="@pid" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>

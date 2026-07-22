@@ -69,7 +69,7 @@ namespace Business.Services
             {
                 ProductId = productId,
                 ImageUrl = imageUrl,
-                DisplayOrder = dto.DisplayOrder,
+                DisplayOrder = 0,
                 IsMain = dto.IsMain,
             };
 

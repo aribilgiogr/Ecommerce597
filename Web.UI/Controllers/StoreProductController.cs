@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Web.UI.Controllers
 {
@@ -146,6 +147,61 @@ namespace Web.UI.Controllers
             ViewBag.ProductId = id;
 
             return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadImage(int id, CreateProductImageDto model)
+        {
+            var storeId = await GetCurrentStoreIdAsync();
+            if (storeId == 0) return Forbid();
+
+            if (await storeProductService.AddProductImageAsync(storeId, id, model, webHostEnvironment.WebRootPath))
+            {
+                return RedirectToAction("images", new { id });
+            }
+
+            ModelState.AddModelError(string.Empty, "Görüntü yükleme başarısız oldu!");
+
+            var images = await storeProductService.GetProductImagesAsync(storeId, id);
+            ViewBag.Images = images;
+            ViewBag.ProductId = id;
+
+            return View("images", model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteImage(int productId, int imageId)
+        {
+            var storeId = await GetCurrentStoreIdAsync();
+            if (storeId == 0) return Forbid();
+
+            await storeProductService.DeleteProductImageAsync(storeId, productId, imageId);
+
+            return RedirectToAction("images", new { id = productId });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetMainImage(int productId, int imageId)
+        {
+            var storeId = await GetCurrentStoreIdAsync();
+            if (storeId == 0) return Forbid();
+
+            await storeProductService.SetProductMainImageAsync(storeId, productId, imageId);
+
+            return RedirectToAction("images", new { id = productId });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeDisplayOrders(int id, Dictionary<int, int> imageOrders)
+        {
+            var storeId = await GetCurrentStoreIdAsync();
+            if (storeId == 0) return Forbid();
+
+            if (imageOrders != null && imageOrders.Count > 0)
+            {
+                await storeProductService.UpdateImageDisplayOrderAsync(storeId, id, imageOrders);
+            }
+            return RedirectToAction("images", new { id });
         }
     }
 }

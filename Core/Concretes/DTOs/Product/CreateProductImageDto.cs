@@ -6,6 +6,5 @@ namespace Core.Concretes.DTOs.Product
     {
         public IFormFile? File { get; set; }
         public bool IsMain { get; set; } = false;
-        public int DisplayOrder { get; set; }
     }
 }
