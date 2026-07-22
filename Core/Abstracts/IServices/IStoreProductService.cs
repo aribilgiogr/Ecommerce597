@@ -13,8 +13,11 @@ namespace Core.Abstracts.IServices
         Task<bool> DeleteProductAsync(int storeId, int productId);
 
         Task<IEnumerable<ProductImageDto>> GetProductImagesAsync(int storeId, int productId);
-        Task<bool> AddProductImageAsync(int storeId, int productId, CreateProductImageDto dto);
+        Task<bool> AddProductImageAsync(int storeId, int productId, CreateProductImageDto dto, string uploadRootPath);
         Task<bool> DeleteProductImageAsync(int storeId, int productId, int imageId);
+        Task<bool> SetProductMainImageAsync(int storeId, int productId, int imageId);
+        Task<bool> UpdateImageDisplayOrderAsync(int storeId, int productId, Dictionary<int, int> imageOrders);
+
 
         Task<IEnumerable<ProductFeatureDto>> GetProductFeaturesAsync(int storeId, int productId);
         Task<bool> AddProductFeatureAsync(int storeId, int productId, CreateProductFeatureDto dto);

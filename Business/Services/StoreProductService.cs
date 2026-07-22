@@ -2,13 +2,13 @@
 using Core.Concretes.DTOs.Product;
 using Core.Concretes.Entities;
 using Core.Utils.GenericRepositoryPattern;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Business.Services
 {
     public class StoreProductService : IStoreProductService
     {
         private readonly IUnitOfWork unitOfWork;
-
         public StoreProductService(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
@@ -35,18 +35,40 @@ namespace Business.Services
             return affectedRows > 0;
         }
 
-        public async Task<bool> AddProductImageAsync(int storeId, int productId, CreateProductImageDto dto)
+        public async Task<bool> AddProductImageAsync(int storeId, int productId, CreateProductImageDto dto, string uploadRootPath)
         {
             var productRepository = unitOfWork.Repository<Product>();
             var product = await productRepository.GetByIdAsync(productId);
 
             if (product == null || product.StoreId != storeId) return false;
 
+            // Ürün görseli dosya yükleme (upload) aşaması
+            if (dto.File == null || dto.File.Length == 0) return false;
+
+            string uploadFolder = Path.Combine(uploadRootPath, "uploads", $"store_{storeId}");
+
+            if (!Directory.Exists(uploadFolder))
+            {
+                Directory.CreateDirectory(uploadFolder);
+            }
+
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.File.FileName;
+            string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await dto.File.CopyToAsync(fileStream);
+            }
+
+            // Yükleme tamamlandı
+
+            string imageUrl = $"/uploads/store_{storeId}/{uniqueFileName}";
+
             var imageRepository = unitOfWork.Repository<ProductImage>();
             var image = new ProductImage
             {
                 ProductId = productId,
-                ImageUrl = dto.ImageUrl,
+                ImageUrl = imageUrl,
                 DisplayOrder = dto.DisplayOrder,
                 IsMain = dto.IsMain,
             };
@@ -55,6 +77,7 @@ namespace Business.Services
             int affectedRows = await unitOfWork.CommitAsync();
 
             return affectedRows > 0;
+
         }
 
         public async Task<bool> CreateProductAsync(int storeId, CreateProductDto dto)
@@ -128,7 +151,10 @@ namespace Business.Services
 
             if (image == null || image.ProductId != productId) return false;
 
-            imageRepository.Delete(image);
+            image.Deleted = true;
+            image.Active = false;
+
+            imageRepository.Update(image);
             int affectedRows = await unitOfWork.CommitAsync();
 
             return affectedRows > 0;
@@ -219,6 +245,62 @@ namespace Business.Services
                 Active = p.Active,
                 UpdatedAt = p.UpdatedAt ?? p.CreatedAt
             });
+        }
+
+        public async Task<bool> SetProductMainImageAsync(int storeId, int productId, int imageId)
+        {
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return false;
+
+            var imageRepository = unitOfWork.Repository<ProductImage>();
+            var images = await imageRepository.GetManyAsync(i => i.ProductId == productId && !i.Deleted);
+
+            var selectedImage = images.FirstOrDefault(i => i.Id == imageId);
+            if (selectedImage == null || selectedImage.ProductId != productId) return false;
+
+            foreach (var img in images)
+            {
+                img.IsMain = false;
+                imageRepository.Update(img);
+            }
+            selectedImage.IsMain = true;
+            imageRepository.Update(selectedImage);
+            int affectedRows = await unitOfWork.CommitAsync();
+
+            return affectedRows > 0;
+        }
+
+        public async Task<bool> UpdateImageDisplayOrderAsync(int storeId, int productId, Dictionary<int, int> imageOrders)
+        {
+            var productRepository = unitOfWork.Repository<Product>();
+            var product = await productRepository.GetByIdAsync(productId);
+
+            if (product == null || product.StoreId != storeId) return false;
+
+            var imageRepository = unitOfWork.Repository<ProductImage>();
+            var images = await imageRepository.GetManyAsync(i => i.ProductId == productId && !i.Deleted);
+
+            bool isUpdated = false;
+
+            foreach (var img in images)
+            {
+                if (imageOrders.TryGetValue(img.Id, out int newOrder))
+                {
+                    img.DisplayOrder = newOrder;
+                    imageRepository.Update(img);
+                    isUpdated = true;
+                }
+            }
+
+            if (isUpdated)
+            {
+                int affectedRows = await unitOfWork.CommitAsync();
+
+                return affectedRows > 0;
+            }
+            return false;
         }
 
         public async Task<bool> UpdateProductAsync(int storeId, UpdateProductDto dto)

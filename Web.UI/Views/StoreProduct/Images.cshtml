@@ -1,0 +1,92 @@
+﻿@model CreateProductImageDto
+@{
+    ViewData["Title"] = "Product Images";
+    int pid = ViewBag.ProductId;
+    var images = ViewBag.Images as IEnumerable<ProductImageDto>;
+}
+
+<h2>Ürün Yönetimi</h2>
+<hr />
+<!-- Yükleme Formu -->
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header text-bg-primary">
+                <h5>Yeni Görsel Yükle</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="uploadImage" asp-controller="storeproduct" asp-route-id="@pid" method="post" enctype="multipart/form-data">
+                    <div class="form-group mb-3">
+                        <label asp-for="File" class="control-label">Görsel Seç</label>
+                        <input asp-for="File" class="form-control" type="file" accept="image/*" required />
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="IsMain" class="form-check-input" />
+                        <label asp-for="IsMain" class="form-check-label">Kapak görseli olsun mu?</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Yükle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h4>Mevcut Görseller</h4>
+        @if (images != null && images.Any())
+        {
+            <form asp-action="changeDisplayOrders" asp-controller="storeProduct" asp-route-id="@pid" method="post">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sıra No</th>
+                            <th>Görsel</th>
+                            <th>Kapak görseli mi?</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var img in images)
+                        {
+                            <tr>
+                                <td>
+                                    <!-- Sıralama bağlantısı için -->
+                                    <input type="number" step="1" min="0" name="imageOrders[@img.Id]" value="@img.DisplayOrder" class="form-control form-control-sm" />
+                                </td>
+                                <td>
+                                    <img src="@img.ImageUrl" class="img-thumbnail" style="max-width:5rem; max-height:5rem;" />
+                                </td>
+                                <td>
+                                    @if (img.IsMain)
+                                    {
+                                        <span class="text-success fw-bold">Evet</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-dark">Hayır</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!img.IsMain)
+                                    {
+                                        <button type="submit" asp-action="setMainImage" asp-controller="storeProduct" asp-route-productId="@pid" asp-route-imageId="@img.Id" class="btn btn-sm btn-success">
+                                            Kapak Görseli Yap
+                                        </button>
+                                    }
+                                    <button type="submit" asp-action="deleteImage" asp-controller="storeProduct" asp-route-productId="@pid" asp-route-imageId="@img.Id" class="btn btn-sm btn-danger" onclick="return confirm('Görseli silmek istediğinize emin misiniz?')">
+                                        Sil
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div>
+                    <button type="submit" class="btn btn-warning">Sıralamayı Kaydet</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info">Bu ürüne ait henüz görsel bulunmamaktadır!</div>
+        }
+    </div>
+</div>

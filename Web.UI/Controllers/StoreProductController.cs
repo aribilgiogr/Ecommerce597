@@ -16,13 +16,15 @@ namespace Web.UI.Controllers
         private readonly UserManager<Member> userManager;
         private readonly ICategoryService categoryService;
         private readonly IBrandService brandService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public StoreProductController(IStoreProductService storeProductService, UserManager<Member> userManager, ICategoryService categoryService, IBrandService brandService)
+        public StoreProductController(IStoreProductService storeProductService, UserManager<Member> userManager, ICategoryService categoryService, IBrandService brandService, IWebHostEnvironment webHostEnvironment)
         {
             this.userManager = userManager;
             this.storeProductService = storeProductService;
             this.categoryService = categoryService;
             this.brandService = brandService;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         private async Task<int> GetCurrentStoreIdAsync()
@@ -132,6 +134,18 @@ namespace Web.UI.Controllers
             // Farklı bir action yapısına bilgi göndermek için TempData kullanılır.
             TempData["ErrorMessage"] = "Ürün silinirken bir hata oluştu.";
             return RedirectToAction("delete", new { id });
+        }
+
+        public async Task<IActionResult> Images(int id)
+        {
+            var storeId = await GetCurrentStoreIdAsync();
+            if (storeId == 0) return Forbid();
+
+            var images = await storeProductService.GetProductImagesAsync(storeId, id);
+            ViewBag.Images = images;
+            ViewBag.ProductId = id;
+
+            return View();
         }
     }
 }
