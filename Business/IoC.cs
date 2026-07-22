@@ -28,6 +28,8 @@ namespace Business
             services.AddScoped<IStoreProductService, StoreProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IMallStoreFrontService, MallStoreFrontService>();
+
             return services;
         }
 

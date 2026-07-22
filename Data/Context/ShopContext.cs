@@ -35,6 +35,14 @@ namespace Data.Context
             builder.Entity<Product>()
                 .Navigation(p => p.Brand)
                 .AutoInclude();
+
+            builder.Entity<Product>()
+                .Navigation(p => p.Store)
+                .AutoInclude();
+
+            builder.Entity<Product>()
+                .Navigation(p => p.Images)
+                .AutoInclude();
             #endregion
 
             #region Birebir ilişkiler (Kimlik ve Profiller)

@@ -1,22 +1,32 @@
+using Core.Abstracts.IServices;
+using Core.Concretes.DTOs.Mall;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Web.UI.Models;
 
 namespace Web.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMallStoreFrontService service;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMallStoreFrontService service)
         {
-            _logger = logger;
+            this.service = service;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var activeStores = await service.GetActiveStoresAsync();
+            var featuredProducts = await service.GetFeaturedProductsAsync();
+            var model = new MallHomeDto
+            {
+                ActiveStores = activeStores,
+                FeaturedProducts = featuredProducts
+            };
+            return View(model);
         }
 
         [Authorize]
