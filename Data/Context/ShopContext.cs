@@ -22,6 +22,10 @@ namespace Data.Context
         public virtual DbSet<ProductImage> ProductImages { get; set; }
         public virtual DbSet<ProductFeature> ProductFeatures { get; set; }
 
+        // Sepet - Sipariş Modelleri
+        public virtual DbSet<Cart> Carts { get; set; }
+        public virtual DbSet<CartItem> CartItems { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,6 +46,14 @@ namespace Data.Context
 
             builder.Entity<Product>()
                 .Navigation(p => p.Images)
+                .AutoInclude();
+
+            builder.Entity<Cart>()
+                .Navigation(c => c.Items)
+                .AutoInclude();
+
+            builder.Entity<CartItem>()
+                .Navigation(c => c.Product)
                 .AutoInclude();
             #endregion
 
@@ -109,6 +121,26 @@ namespace Data.Context
                 .HasForeignKey(pf => pf.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Sepet -> Üye
+            builder.Entity<Cart>()
+                .HasOne(c => c.Member)
+                .WithMany(p => p.Carts)
+                .HasForeignKey(c => c.MemeberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Sepet Ürünü -> Sepet
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.Items)
+                .HasForeignKey(c => c.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Sepet Ürünü -> Ürün
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(ci => ci.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
             // Bazı sütun ayarları da burada yapılabilir.

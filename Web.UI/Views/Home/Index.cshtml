@@ -3,6 +3,22 @@
     ViewData["Title"] = "E-AVM 597";
 }
 
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 g-3 my-5">
+    @if (Model.ActiveStores != null && Model.ActiveStores.Any())
+    {
+        foreach (var store in Model.ActiveStores)
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@store.StoreName</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 my-5">
     @if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
     {

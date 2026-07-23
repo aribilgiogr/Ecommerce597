@@ -21,5 +21,6 @@ namespace Core.Concretes.Entities
 
         public virtual ICollection<ProductFeature> Features { get; set; } = [];
         public virtual ICollection<ProductImage> Images { get; set; } = [];
+        public virtual ICollection<CartItem> CartItems { get; set; } = [];
     }
 }

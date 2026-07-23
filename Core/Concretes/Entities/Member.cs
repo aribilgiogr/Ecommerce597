@@ -12,5 +12,7 @@ namespace Core.Concretes.Entities
         public virtual Admin? AdminProfile { get; set; }
         public virtual Customer? CustomerProfile { get; set; }
         public virtual Store? StoreProfile { get; set; }
+
+        public virtual ICollection<Cart> Carts { get; set; } = [];
     }
 }

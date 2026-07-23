@@ -29,9 +29,9 @@ namespace Business
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IMallStoreFrontService, MallStoreFrontService>();
+            services.AddScoped<ISalesService, SalesService>();
 
             return services;
         }
-
     }
 }
